@@ -5,19 +5,17 @@ import (
 	"reflect"
 	"strconv"
 	"testing"
-
-	"github.com/exmo-dev/exmo_api_lib/tree/master/golang/exmo"
 )
 
 func TestApi_query(t *testing.T) {
 
-	//var orderId string // global variable for testing order cancelling after buying
+	var orderId string // global variable for testing order cancelling after buying
 
 	// ATTENTION!
 	key := ""    // TODO replace with your api key from profile page
 	secret := "" // TODO replace with your api secret from profile page
 
-	api := exmo.Api(key, secret)
+	api := Api(key, secret)
 
 	t.Run("Get trades", func(t *testing.T) {
 		result, err := api.GetTrades("BTC_RUB")
@@ -212,147 +210,147 @@ func TestApi_query(t *testing.T) {
 		}
 	})
 
-	//t.Run("Buy BTC (custom price)", func(t *testing.T) {
-	//	order, errOrder := api.Buy("BTC_RUB", "0.001", "50096.72")
-	//	if errOrder != nil {
-	//		t.Errorf("api error: %s\n", errOrder.Error())
-	//	} else {
-	//		fmt.Println("Creating order...")
-	//		for key, value := range order {
-	//			if key == "result" && value != true {
-	//				fmt.Println("\nError")
-	//			}
-	//			if key == "error" && value != "" {
-	//				fmt.Println(value)
-	//			}
-	//			if key == "order_id" && value != nil {
-	//				val := strconv.Itoa(int(value.(float64)))
-	//				orderId = val
-	//				fmt.Printf("Order id: %s", orderId)
-	//			}
-	//		}
-	//	}
-	//})
-	//
-	//t.Run("Buy BTC (market price)", func(t *testing.T) {
-	//	order, errOrder := api.MarketBuy("BTC_RUB", "0.001")
-	//	if errOrder != nil {
-	//		t.Errorf("api error: %s\n", errOrder.Error())
-	//	} else {
-	//		fmt.Println("Creating order...")
-	//		for key, value := range order {
-	//			if key == "result" && value != true {
-	//				fmt.Println("\nError")
-	//			}
-	//			if key == "error" && value != "" {
-	//				fmt.Println(value)
-	//			}
-	//			if key == "order_id" && value != nil {
-	//				fmt.Printf("Order id: %f", value.(float64))
-	//			}
-	//		}
-	//	}
-	//})
-	//
-	//t.Run("Sell BTC (custom price)", func(t *testing.T) {
-	//	order, errOrder := api.Sell("BTC_RUB", "0.001", "800000")
-	//	if errOrder != nil {
-	//		t.Errorf("api error: %s\n", errOrder.Error())
-	//	} else {
-	//		fmt.Println("Creating order...")
-	//		for key, value := range order {
-	//			if key == "result" && value != true {
-	//				fmt.Println("\nError")
-	//			}
-	//			if key == "error" && value != "" {
-	//				fmt.Println(value)
-	//			}
-	//			if key == "order_id" && value != nil {
-	//				fmt.Printf("Order id: %f", value.(float64))
-	//			}
-	//		}
-	//	}
-	//})
-	//
-	//t.Run("Sell BTC (market price)", func(t *testing.T) {
-	//	order, errOrder := api.MarketSell("BTC_RUB", "0.001")
-	//	if errOrder != nil {
-	//		t.Errorf("api error: %s\n", errOrder.Error())
-	//	} else {
-	//		fmt.Println("Creating order...")
-	//		for key, value := range order {
-	//			if key == "result" && value != true {
-	//				fmt.Println("\nError")
-	//			}
-	//			if key == "error" && value != "" {
-	//				fmt.Println(value)
-	//			}
-	//			if key == "order_id" && value != nil {
-	//				fmt.Printf("Order id: %f", value.(float64))
-	//			}
-	//		}
-	//	}
-	//})
+	t.Run("Buy BTC (custom price)", func(t *testing.T) {
+		order, errOrder := api.Buy("BTC_RUB", "0.001", "50096.72")
+		if errOrder != nil {
+			t.Errorf("api error: %s\n", errOrder.Error())
+		} else {
+			fmt.Println("Creating order...")
+			for key, value := range order {
+				if key == "result" && value != true {
+					fmt.Println("\nError")
+				}
+				if key == "error" && value != "" {
+					fmt.Println(value)
+				}
+				if key == "order_id" && value != nil {
+					val := strconv.Itoa(int(value.(float64)))
+					orderId = val
+					fmt.Printf("Order id: %s", orderId)
+				}
+			}
+		}
+	})
 
-	//t.Run("Cancel order", func(t *testing.T) {
-	//	orderCancel, errCancel := api.OrderCancel(orderId)
-	//	if errCancel != nil {
-	//		t.Errorf("api error: %s\n", errCancel.Error())
-	//	} else {
-	//		fmt.Printf("\nCancel order %s \n", orderId)
-	//		for key, value := range orderCancel {
-	//			if key == "result" && value != true {
-	//				fmt.Println("\nError")
-	//			}
-	//			if key == "error" && value != "" {
-	//				fmt.Println(value)
-	//			}
-	//		}
-	//	}
-	//})
-	//
-	//t.Run("Get user's open orders", func(t *testing.T) {
-	//	resultUserOpenOrders, errUserOpenOrders := api.GetUserOpenOrders()
-	//	if errUserOpenOrders != nil {
-	//		fmt.Errorf("api error: %s\n", errUserOpenOrders.Error())
-	//	} else {
-	//		for _, v := range resultUserOpenOrders {
-	//			if v != nil {
-	//				for _, val := range v.([]interface{}) {
-	//					for key, value := range val.(map[string]interface{}) {
-	//						if key == "quantity" {
-	//							check, err := strconv.ParseFloat(value.(string), 64)
-	//							if err != nil {
-	//								t.Errorf("Could not convert %s to float64", key)
-	//							}
-	//							if check < 0 {
-	//								t.Errorf("%s could not be less 0, got %d", key, value)
-	//							}
-	//						}
-	//						if key == "price" {
-	//							check, err := strconv.Atoi(value.(string))
-	//							if err != nil {
-	//								t.Errorf("Could not convert %s to int", key)
-	//							}
-	//							if check < 0 {
-	//								t.Errorf("%s could not be less 0, got %d", key, value)
-	//							}
-	//						}
-	//						if key == "amount" {
-	//							check, err := strconv.ParseFloat(value.(string), 64)
-	//							if err != nil {
-	//								t.Errorf("Could not convert %s to float64", key)
-	//							}
-	//							if check < 0 {
-	//								t.Errorf("%s could not be less 0, got %d", key, value)
-	//							}
-	//						}
-	//					}
-	//				}
-	//			}
-	//		}
-	//	}
-	//})
+	t.Run("Buy BTC (market price)", func(t *testing.T) {
+		order, errOrder := api.MarketBuy("BTC_RUB", "0.001")
+		if errOrder != nil {
+			t.Errorf("api error: %s\n", errOrder.Error())
+		} else {
+			fmt.Println("Creating order...")
+			for key, value := range order {
+				if key == "result" && value != true {
+					fmt.Println("\nError")
+				}
+				if key == "error" && value != "" {
+					fmt.Println(value)
+				}
+				if key == "order_id" && value != nil {
+					fmt.Printf("Order id: %f", value.(float64))
+				}
+			}
+		}
+	})
+
+	t.Run("Sell BTC (custom price)", func(t *testing.T) {
+		order, errOrder := api.Sell("BTC_RUB", "0.001", "800000")
+		if errOrder != nil {
+			t.Errorf("api error: %s\n", errOrder.Error())
+		} else {
+			fmt.Println("Creating order...")
+			for key, value := range order {
+				if key == "result" && value != true {
+					fmt.Println("\nError")
+				}
+				if key == "error" && value != "" {
+					fmt.Println(value)
+				}
+				if key == "order_id" && value != nil {
+					fmt.Printf("Order id: %f", value.(float64))
+				}
+			}
+		}
+	})
+
+	t.Run("Sell BTC (market price)", func(t *testing.T) {
+		order, errOrder := api.MarketSell("BTC_RUB", "0.001")
+		if errOrder != nil {
+			t.Errorf("api error: %s\n", errOrder.Error())
+		} else {
+			fmt.Println("Creating order...")
+			for key, value := range order {
+				if key == "result" && value != true {
+					fmt.Println("\nError")
+				}
+				if key == "error" && value != "" {
+					fmt.Println(value)
+				}
+				if key == "order_id" && value != nil {
+					fmt.Printf("Order id: %f", value.(float64))
+				}
+			}
+		}
+	})
+
+	t.Run("Cancel order", func(t *testing.T) {
+		orderCancel, errCancel := api.OrderCancel(orderId)
+		if errCancel != nil {
+			t.Errorf("api error: %s\n", errCancel.Error())
+		} else {
+			fmt.Printf("\nCancel order %s \n", orderId)
+			for key, value := range orderCancel {
+				if key == "result" && value != true {
+					fmt.Println("\nError")
+				}
+				if key == "error" && value != "" {
+					fmt.Println(value)
+				}
+			}
+		}
+	})
+
+	t.Run("Get user's open orders", func(t *testing.T) {
+		resultUserOpenOrders, errUserOpenOrders := api.GetUserOpenOrders()
+		if errUserOpenOrders != nil {
+			fmt.Errorf("api error: %s\n", errUserOpenOrders.Error())
+		} else {
+			for _, v := range resultUserOpenOrders {
+				if v != nil {
+					for _, val := range v.([]interface{}) {
+						for key, value := range val.(map[string]interface{}) {
+							if key == "quantity" {
+								check, err := strconv.ParseFloat(value.(string), 64)
+								if err != nil {
+									t.Errorf("Could not convert %s to float64", key)
+								}
+								if check < 0 {
+									t.Errorf("%s could not be less 0, got %d", key, value)
+								}
+							}
+							if key == "price" {
+								check, err := strconv.Atoi(value.(string))
+								if err != nil {
+									t.Errorf("Could not convert %s to int", key)
+								}
+								if check < 0 {
+									t.Errorf("%s could not be less 0, got %d", key, value)
+								}
+							}
+							if key == "amount" {
+								check, err := strconv.ParseFloat(value.(string), 64)
+								if err != nil {
+									t.Errorf("Could not convert %s to float64", key)
+								}
+								if check < 0 {
+									t.Errorf("%s could not be less 0, got %d", key, value)
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	})
 
 	t.Run("Get user's cancelled orders", func(t *testing.T) {
 		resultUserCancelledOrders, errUserCancelledOrders := api.GetUserCancelledOrders(0, 100)

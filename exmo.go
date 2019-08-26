@@ -29,6 +29,7 @@ type ApiParams map[string]string
 type Exmo struct {
 	key    string // public key
 	secret string // secret key
+	client *http.Client
 }
 
 // CheckErr checks error object
@@ -40,7 +41,17 @@ func CheckErr(err error) {
 
 // Api creates Exmo instance with specified credentials
 func Api(key string, secret string) Exmo {
-	return Exmo{key, secret}
+	var netTransport = &http.Transport{
+		MaxIdleConns:        30,
+		MaxConnsPerHost:     2,
+		IdleConnTimeout:     30 * time.Second,
+		TLSHandshakeTimeout: 5 * time.Second,
+	}
+	var client = &http.Client{
+		Timeout:   time.Second * 10,
+		Transport: netTransport,
+	}
+	return Exmo{key, secret, client}
 }
 
 // Api_query is a general query method for API calls
@@ -65,8 +76,7 @@ func (ex *Exmo) Api_query(mode string, method string, params ApiParams) (ApiResp
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Add("Content-Length", strconv.Itoa(len(post_content)))
 
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	resp, err := ex.client.Do(req)
 	if err != nil {
 		return nil, err
 	}

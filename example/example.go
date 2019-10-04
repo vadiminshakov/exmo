@@ -8,7 +8,7 @@ import (
 	_ "strconv"
 	"time"
 
-	"exmo"
+	"github.com/vadiminshakov/exmo"
 )
 
 func main() {
@@ -20,9 +20,9 @@ func main() {
 
 	api := exmo.Api(key, secret)
 
-	resultTrades, errTrades := api.GetTrades("BTC_RUB")
-	if errTrades != nil {
-		fmt.Errorf("api error: %s\n", errTrades.Error())
+	resultTrades, err := api.GetTrades("BTC_RUB")
+	if err != nil {
+		fmt.Errorf("api error: %s\n", err)
 	} else {
 		for _, v := range resultTrades {
 			for k, val := range v.([]interface{}) {
@@ -44,9 +44,9 @@ func main() {
 		}
 	}
 
-	resultBook, errBook := api.GetOrderBook("BTC_RUB", 200)
-	if errBook != nil {
-		fmt.Errorf("api error: %s\n", errBook.Error())
+	resultBook, err := api.GetOrderBook("BTC_RUB", 200)
+	if err != nil {
+		fmt.Errorf("api error: %s\n", err)
 	} else {
 		for _, v := range resultBook {
 			for key, value := range v.(map[string]interface{}) {
@@ -73,9 +73,9 @@ func main() {
 		}
 	}
 
-	ticker, errTicker := api.Ticker()
-	if errTicker != nil {
-		fmt.Printf("api error: %s\n", errTicker.Error())
+	ticker, err := api.Ticker()
+	if err != nil {
+		fmt.Printf("api error: %s\n", err)
 	} else {
 		for pair, pairvalue := range ticker {
 			fmt.Printf("\n\n%s:\n", pair)
@@ -85,9 +85,9 @@ func main() {
 		}
 	}
 
-	resultPairSettings, errPairSettings := api.GetPairSettings()
-	if errPairSettings != nil {
-		fmt.Printf("api error: %s\n", errPairSettings.Error())
+	resultPairSettings, err := api.GetPairSettings()
+	if err != nil {
+		fmt.Printf("api error: %s\n", err)
 	} else {
 		for pair, pairvalue := range resultPairSettings {
 			fmt.Printf("\n\n%s:\n", pair)
@@ -97,9 +97,9 @@ func main() {
 		}
 	}
 
-	resultCurrency, errCurrency := api.GetCurrency()
-	if errCurrency != nil {
-		fmt.Printf("api error: %s\n", errCurrency.Error())
+	resultCurrency, err := api.GetCurrency()
+	if err != nil {
+		fmt.Printf("api error: %s\n", err)
 	} else {
 		fmt.Println("\nCurrencies:")
 		for _, pair := range resultCurrency {
@@ -107,9 +107,9 @@ func main() {
 		}
 	}
 
-	resultUserInfo, errUserInfo := api.GetUserInfo()
-	if errUserInfo != nil {
-		fmt.Printf("api error: %s\n", errUserInfo.Error())
+	resultUserInfo, err := api.GetUserInfo()
+	if err != nil {
+		fmt.Printf("api error: %s\n", err)
 	} else {
 		for key, value := range resultUserInfo {
 			if key == "balances" {
@@ -130,9 +130,9 @@ func main() {
 
 	fmt.Printf("-------------\n")
 
-	usertrades, err1 := api.GetUserTrades("BTC_RUB")
-	if err1 != nil {
-		fmt.Printf("api error: %s\n", err1.Error())
+	usertrades, err := api.GetUserTrades("BTC_RUB")
+	if err != nil {
+		fmt.Printf("api error: %s\n", err)
 	} else {
 		fmt.Println("User trades")
 		for pair, val := range usertrades {
@@ -146,9 +146,9 @@ func main() {
 		}
 	}
 
-	order, errOrder := api.Buy("BTC_RUB", "0.001", "50096")
-	if errOrder != nil {
-		fmt.Printf("api error: %s\n", errOrder.Error())
+	order, err := api.Buy("BTC_RUB", "0.001", "50096")
+	if err != nil {
+		fmt.Printf("api error: %s\n", err)
 	} else {
 		fmt.Println("Creating order...")
 		for key, value := range order {
@@ -167,9 +167,9 @@ func main() {
 		}
 	}
 
-	marketOrder, errMarketOrder := api.MarketBuy("BTC_RUB", "0.001")
-	if errMarketOrder != nil {
-		fmt.Printf("api error: %s\n", errMarketOrder.Error())
+	marketOrder, err := api.MarketBuy("BTC_RUB", "0.001")
+	if err != nil {
+		fmt.Printf("api error: %s\n", err)
 	} else {
 		fmt.Println("Creating order...")
 		for key, value := range marketOrder {
@@ -187,9 +187,9 @@ func main() {
 		}
 	}
 
-	orderSell, errOrderSell := api.Sell("BTC_RUB", "0.001", "800000")
-	if errOrderSell != nil {
-		fmt.Printf("api error: %s\n", errOrderSell.Error())
+	orderSell, err := api.Sell("BTC_RUB", "0.001", "800000")
+	if err != nil {
+		fmt.Printf("api error: %s\n", err)
 	} else {
 		fmt.Println("Creating order...")
 		for key, value := range orderSell {
@@ -207,9 +207,9 @@ func main() {
 		}
 	}
 
-	orderSellMarket, errOrderSellMarket := api.MarketSell("BTC_RUB", "0.0005")
-	if errOrderSellMarket != nil {
-		fmt.Printf("api error: %s\n", errOrderSellMarket.Error())
+	orderSellMarket, err := api.MarketSell("BTC_RUB", "0.0005")
+	if err != nil {
+		fmt.Printf("api error: %s\n", err)
 	} else {
 		fmt.Println("Creating order...")
 		for key, value := range orderSellMarket {

@@ -257,7 +257,7 @@ func main() {
 
 	resultUserCancelledOrders, err := api.GetUserCancelledOrders(0, 100)
 	if err != nil {
-		fmt.Errorf("api error: %s\n", err.Error())
+		fmt.Errorf("api error: %s\n", err)
 	} else {
 		for _, v := range resultUserCancelledOrders {
 			for key, val := range v.(map[string]interface{}) {
@@ -274,17 +274,16 @@ func main() {
 
 	resultOrderTrades, err := api.GetOrderTrades(orderId)
 	if err != nil {
-		fmt.Errorf("api error: %s\n", err.Error())
+		fmt.Errorf("api error: %s\n", err)
 	} else {
 		for k, v := range resultOrderTrades {
 			fmt.Println(k, v)
-
 		}
 	}
 
-	resultRequiredAmount, errRequiredAmount := api.GetRequiredAmount("BTC_RUB", "0.01")
-	if errRequiredAmount != nil {
-		fmt.Errorf("api error: %s\n", errRequiredAmount.Error())
+	resultRequiredAmount, err := api.GetRequiredAmount("BTC_RUB", "0.01")
+	if err != nil {
+		fmt.Errorf("api error: %s\n", err)
 	} else {
 		for k, v := range resultRequiredAmount {
 			fmt.Println(k, v)

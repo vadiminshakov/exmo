@@ -494,17 +494,21 @@ _Get history of wallet_
 
 **date** - timestamp of the day (if empty got current day)
 
-    resultWalletHistory, err := api.GetWalletHistory(time.Now())
+    date := time.Date(2019, 10, 4, 0, 0, 0, 0, time.UTC)
+    	subdate := 10*time.Hour
+    
+    	resultWalletHistory, err := api.GetWalletHistory(date.Truncate(subdate))
+    
     	if err != nil {
     		fmt.Errorf("api error: %s\n", err)
     	} else {
     		for k, v := range resultWalletHistory {
     			if k == "history" {
+    				fmt.Println(k, v)
     				for key, val := range v.([]interface{}) {
     					fmt.Println(key, val)
     				}
     			}
-    			fmt.Println(k, v)
     		}
     	}
 

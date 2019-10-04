@@ -227,9 +227,9 @@ func main() {
 		}
 	}
 
-	orderCancel, errCancel := api.OrderCancel(orderId)
-	if errCancel != nil {
-		fmt.Printf("api error: %s\n", errCancel.Error())
+	orderCancel, err := api.OrderCancel(orderId)
+	if err != nil {
+		fmt.Printf("api error: %s\n", err)
 	} else {
 		fmt.Printf("\nCancel order %s \n", orderId)
 		for key, value := range orderCancel {
@@ -242,9 +242,9 @@ func main() {
 		}
 	}
 
-	resultUserOpenOrders, errUserOpenOrders := api.GetUserOpenOrders()
-	if errUserOpenOrders != nil {
-		fmt.Errorf("api error: %s\n", errUserOpenOrders.Error())
+	resultUserOpenOrders, err := api.GetUserOpenOrders()
+	if err != nil {
+		fmt.Errorf("api error: %s\n", err)
 	} else {
 		for _, v := range resultUserOpenOrders {
 			for _, val := range v.([]interface{}) {
@@ -255,9 +255,9 @@ func main() {
 		}
 	}
 
-	resultUserCancelledOrders, errUserCancelledOrders := api.GetUserCancelledOrders(0, 100)
-	if errUserCancelledOrders != nil {
-		fmt.Errorf("api error: %s\n", errUserCancelledOrders.Error())
+	resultUserCancelledOrders, err := api.GetUserCancelledOrders(0, 100)
+	if err != nil {
+		fmt.Errorf("api error: %s\n", err.Error())
 	} else {
 		for _, v := range resultUserCancelledOrders {
 			for key, val := range v.(map[string]interface{}) {
@@ -271,9 +271,10 @@ func main() {
 	}
 
 	time.Sleep(10000 * time.Millisecond)
-	resultOrderTrades, errOrderTrades := api.GetOrderTrades(orderId)
-	if errOrderTrades != nil {
-		fmt.Errorf("api error: %s\n", errOrderTrades.Error())
+
+	resultOrderTrades, err := api.GetOrderTrades(orderId)
+	if err != nil {
+		fmt.Errorf("api error: %s\n", err.Error())
 	} else {
 		for k, v := range resultOrderTrades {
 			fmt.Println(k, v)

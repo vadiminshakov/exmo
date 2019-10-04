@@ -470,3 +470,41 @@ _Calculating the sum of buying a certain amount of currency for the particular c
     			fmt.Println(k, v)
     		}
     	}
+
+<br>
+
+**GetDepositAddress()**
+
+_Getting the list of addresses for cryptocurrency deposit_
+
+    resultDepositAddress, err := api.GetDepositAddress()
+    	if err != nil {
+    		fmt.Errorf("api error: %s\n", err)
+    	} else {
+    		for k, v := range resultDepositAddress {
+    			fmt.Println(k, v)
+    		}
+    	}
+
+<br>
+    	
+**GetWalletHistory(date time.Time)**
+
+_Get history of wallet_
+
+**date** - timestamp of the day (if empty got current day)
+
+    resultWalletHistory, err := api.GetWalletHistory(time.Now())
+    	if err != nil {
+    		fmt.Errorf("api error: %s\n", err)
+    	} else {
+    		for k, v := range resultWalletHistory {
+    			if k == "history" {
+    				for key, val := range v.([]interface{}) {
+    					fmt.Println(key, val)
+    				}
+    			}
+    			fmt.Println(k, v)
+    		}
+    	}
+

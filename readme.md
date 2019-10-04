@@ -368,3 +368,88 @@ _Creation of an order to sell the currency at a market price_
     			}
     		}
     	}
+    	
+<br>
+
+**OrderCancel(orderId string)**
+
+_Cancels the open order_
+
+**orderId** - id of the order to cancel
+
+    orderCancel, err := api.OrderCancel(orderId)
+    	if err != nil {
+    		fmt.Printf("api error: %s\n", err)
+    	} else {
+    		fmt.Printf("\nCancel order %s \n", orderId)
+    		for key, value := range orderCancel {
+    			if key == "result" && value != true {
+    				fmt.Println("\nError")
+    			}
+    			if key == "error" && value != "" {
+    				fmt.Println(value)
+    			}
+    		}
+    	}
+    	
+<br>
+
+**GetUserOpenOrders()**
+
+_Getting the list of user’s active orders_
+
+    resultUserOpenOrders, err := api.GetUserOpenOrders()
+    	if err != nil {
+    		fmt.Errorf("api error: %s\n", err)
+    	} else {
+    		for _, v := range resultUserOpenOrders {
+    			for _, val := range v.([]interface{}) {
+    				for key, value := range val.(map[string]interface{}) {
+    					fmt.Println(key, value)
+    				}
+    			}
+    		}
+    	}
+    	
+<br>
+
+**GetUserCancelledOrders(offset uint, limit uint)**
+
+_Getting the list of user’s cancelled orders_
+
+**offset** - last deal offset (default: 0)
+
+**limit** - the number of returned deals (default: 100, мmaximum: 10 000)
+
+    resultUserCancelledOrders, err := api.GetUserCancelledOrders(0, 100)
+    	if err != nil {
+    		fmt.Errorf("api error: %s\n", err.Error())
+    	} else {
+    		for _, v := range resultUserCancelledOrders {
+    			for key, val := range v.(map[string]interface{}) {
+    				if key == "pair" {
+    					fmt.Printf("\n%s\n", val)
+    				} else {
+    					fmt.Println(key, val)
+    				}
+    			}
+    		}
+    	}
+    	
+**GetOrderTrades(orderId string)**
+
+_Getting the history of deals with the order_
+
+**orderId** - order identifier
+
+    resultOrderTrades, err := api.GetOrderTrades(orderId)
+    	if err != nil {
+    		fmt.Errorf("api error: %s\n", err.Error())
+    	} else {
+    		for k, v := range resultOrderTrades {
+    			fmt.Println(k, v)
+    
+    		}
+    	}
+
+    

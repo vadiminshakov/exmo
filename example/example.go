@@ -290,9 +290,9 @@ func main() {
 		}
 	}
 
-	resultDepositAddress, errDepositAddress := api.GetDepositAddress()
-	if errDepositAddress != nil {
-		fmt.Errorf("api error: %s\n", errDepositAddress.Error())
+	resultDepositAddress, err := api.GetDepositAddress()
+	if err != nil {
+		fmt.Errorf("api error: %s\n", err)
 	} else {
 		for k, v := range resultDepositAddress {
 			fmt.Println(k, v)
@@ -303,9 +303,9 @@ func main() {
 	   WALLET API
 	*/
 
-	resultWalletHistory, errWalletHistory := api.GetWalletHistory(time.Now())
-	if errWalletHistory != nil {
-		fmt.Errorf("api error: %s\n", errWalletHistory.Error())
+	resultWalletHistory, err := api.GetWalletHistory(time.Now())
+	if err != nil {
+		fmt.Errorf("api error: %s\n", err)
 	} else {
 		for k, v := range resultWalletHistory {
 			if k == "history" {

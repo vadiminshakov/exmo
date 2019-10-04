@@ -423,7 +423,7 @@ _Getting the list of user’s cancelled orders_
 
     resultUserCancelledOrders, err := api.GetUserCancelledOrders(0, 100)
     	if err != nil {
-    		fmt.Errorf("api error: %s\n", err.Error())
+    		fmt.Errorf("api error: %s\n", err)
     	} else {
     		for _, v := range resultUserCancelledOrders {
     			for key, val := range v.(map[string]interface{}) {
@@ -444,12 +444,29 @@ _Getting the history of deals with the order_
 
     resultOrderTrades, err := api.GetOrderTrades(orderId)
     	if err != nil {
-    		fmt.Errorf("api error: %s\n", err.Error())
+    		fmt.Errorf("api error: %s\n", err)
     	} else {
     		for k, v := range resultOrderTrades {
     			fmt.Println(k, v)
-    
     		}
     	}
 
+
+<br>
+
+**GetRequiredAmount(pair string, quantity string)**
+
+_Calculating the sum of buying a certain amount of currency for the particular currency pair_
     
+**pair** - currency pair
+
+**quantity** - quantity to buy
+
+    resultRequiredAmount, err := api.GetRequiredAmount("BTC_RUB", "0.01")
+    	if err != nil {
+    		fmt.Errorf("api error: %s\n", err)
+    	} else {
+    		for k, v := range resultRequiredAmount {
+    			fmt.Println(k, v)
+    		}
+    	}

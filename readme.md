@@ -1,4 +1,8 @@
-**Usage**                          
+[Usage](https://github.com/VadimInshakov/exmo#usage)
+[Testing](https://github.com/VadimInshakov/exmo#testing)
+[API](https://github.com/VadimInshakov/exmo#api)
+
+###**Usage**                          
 
 Import package into your code:                      
 
@@ -99,9 +103,11 @@ _(**ATTENTION!** Some test tasks will create buy and sell orders using your acco
                                          
 <br/>
 
-### **Methods available**
+### **API**
 
 ---
+
+You can check the [official EXMO API](https://exmo.me/ru/api) for details
 
 <br/>
 
@@ -577,4 +583,3 @@ _Get history of wallet_
     		}
     	}
 ```
-

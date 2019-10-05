@@ -342,7 +342,7 @@ func (ex *Exmo) GetDepositAddress() (response ApiResponse, err error) {
 func (ex *Exmo) GetWalletHistory(date time.Time) (response ApiResponse, err error) {
 	dateUnix := date.Unix()
 
-	dateConverted := dateUnix
+	dateConverted := strconv.Itoa(int(dateUnix))
 
 	if date.IsZero() {
 		response, err = ex.Api_query("authenticated", "wallet_history", ApiParams{})

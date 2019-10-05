@@ -133,7 +133,6 @@ func (ex *Exmo) GetOrderBook(pair string, limit int) (response ApiResponse, err 
 		fmt.Printf("limit param must be in range of 100-1000")
 		response = nil
 		err = errors.New("limit param must be in range of 100-1000")
-
 	} else {
 		response, err = ex.Api_query("public", "order_book", ApiParams{"pair": pair, "limit": string(limit)})
 		CheckErr(err)
@@ -266,6 +265,7 @@ func (ex *Exmo) GetUserOpenOrders() (response ApiResponse, err error) {
 }
 
 // GetUserCancelledOrders returns the list of user’s deals
+// This method almost completely copies Api_query method, but it returns array of interfaces, not map
 func (ex *Exmo) GetUserCancelledOrders(offset uint, limit uint) (response []interface{}, err error) {
 	if limit < 100 || limit > 1000 {
 		fmt.Printf("limit param must be in range of 100-1000")

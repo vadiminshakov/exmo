@@ -11,7 +11,7 @@ Call fabric function for api instance:
 *(you can find key and secret in your profile settings)*  
   
 Now you can use api features, for example:  
-```
+```golang
 package main
     import (
         "github.com/vadiminshakov/exmo" 
@@ -111,7 +111,7 @@ _(**ATTENTION!** Some test tasks will create buy and sell orders using your acco
 _List of the deals on currency pairs_
 
 **arg** - one or various currency pairs separated by commas (example: BTC_USD,BTC_EUR)
-```
+```golang
 resultTrades, err := api.GetTrades("BTC_RUB")
     	if err != nil {
     		fmt.Errorf("api error: %s\n", err)
@@ -147,7 +147,7 @@ resultTrades, err := api.GetTrades("BTC_RUB")
  
  **limit** - the number of returned deals (default: 100, мmaximum: 10 000)
  
- ```
+ ```golang
      resultBook, err := api.GetOrderBook("BTC_RUB", 200)
      	if err != nil {
      		fmt.Errorf("api error: %s\n", err)
@@ -184,7 +184,7 @@ resultTrades, err := api.GetTrades("BTC_RUB")
 
 _Statistics on prices and volume of trades by currency pairs_
 
-```
+```golang
     ticker, err := api.Ticker()
     	if err != nil {
     		fmt.Printf("api error: %s\n", err)
@@ -204,7 +204,7 @@ _Statistics on prices and volume of trades by currency pairs_
 
 _Currency pairs settings_
 
-```
+```golang
     resultPairSettings, err := api.GetPairSettings()
     	if err != nil {
     		fmt.Printf("api error: %s\n", err)
@@ -223,7 +223,7 @@ _Currency pairs settings_
 **GetCurrency()**
 
 _Currencies list_
-```
+```golang
     resultCurrency, err := api.GetCurrency()
     	if err != nil {
     		fmt.Printf("api error: %s\n", err)
@@ -241,7 +241,7 @@ _Currencies list_
 
 _Getting information about user's account_
 
-```
+```golang
     resultUserInfo, err := api.GetUserInfo()
     	if err != nil {
     		fmt.Printf("api error: %s\n", err)
@@ -272,7 +272,7 @@ _Getting the list of user’s deals_
 
 **pair** - one or various currency pairs separated by commas (example: BTC_USD,BTC_EUR)
 
-```
+```golang
     usertrades, err := api.GetUserTrades("BTC_RUB")
     	if err != nil {
     		fmt.Printf("api error: %s\n", err)
@@ -302,7 +302,7 @@ _Creation of an order to buy the currency_
 
 **price** - price for the order
 
-```
+```golang
     order, err := api.Buy("BTC_RUB", "0.001", "50096")
     	if err != nil {
     		fmt.Printf("api error: %s\n", err)
@@ -335,7 +335,7 @@ _Creation of an order to buy the currency at a market price_
 
 **quantity** - quantity for the order
 
-```
+```golang
     marketOrder, err := api.MarketBuy("BTC_RUB", "0.001")
     	if err != nil {
     		fmt.Printf("api error: %s\n", err)
@@ -369,7 +369,7 @@ _Creation of an order to sell the currency_
 
 **price** - price for the order
 
-```
+```golang
     orderSell, err := api.Sell("BTC_RUB", "0.001", "800000")
     	if err != nil {
     		fmt.Printf("api error: %s\n", err)
@@ -401,7 +401,7 @@ _Creation of an order to sell the currency at a market price_
 
 **quantity** - quantity for the order
 
-```
+```golang
     orderSellMarket, err := api.MarketSell("BTC_RUB", "0.0005")
     	if err != nil {
     		fmt.Printf("api error: %s\n", err)
@@ -430,7 +430,7 @@ _Creation of an order to sell the currency at a market price_
 _Cancels the open order_
 
 **orderId** - id of the order to cancel
-```
+```golang
     orderCancel, err := api.OrderCancel(orderId)
     	if err != nil {
     		fmt.Printf("api error: %s\n", err)
@@ -453,7 +453,7 @@ _Cancels the open order_
 
 _Getting the list of user’s active orders_
 
-```
+```golang
     resultUserOpenOrders, err := api.GetUserOpenOrders()
     	if err != nil {
     		fmt.Errorf("api error: %s\n", err)
@@ -478,7 +478,7 @@ _Getting the list of user’s cancelled orders_
 
 **limit** - the number of returned deals (default: 100, мmaximum: 10 000)
 
-```
+```golang
     resultUserCancelledOrders, err := api.GetUserCancelledOrders(0, 100)
     	if err != nil {
     		fmt.Errorf("api error: %s\n", err)
@@ -501,7 +501,7 @@ _Getting the history of deals with the order_
 
 **orderId** - order identifier
 
-```
+```golang
     resultOrderTrades, err := api.GetOrderTrades(orderId)
     	if err != nil {
     		fmt.Errorf("api error: %s\n", err)
@@ -522,7 +522,7 @@ _Calculating the sum of buying a certain amount of currency for the particular c
 
 **quantity** - quantity to buy
 
-```
+```golang
     resultRequiredAmount, err := api.GetRequiredAmount("BTC_RUB", "0.01")
     	if err != nil {
     		fmt.Errorf("api error: %s\n", err)
@@ -539,7 +539,7 @@ _Calculating the sum of buying a certain amount of currency for the particular c
 
 _Getting the list of addresses for cryptocurrency deposit_
 
-```
+```golang
     resultDepositAddress, err := api.GetDepositAddress()
     	if err != nil {
     		fmt.Errorf("api error: %s\n", err)
@@ -558,7 +558,7 @@ _Get history of wallet_
 
 **date** - timestamp of the day (if empty got current day)
 
-```
+```golang
     date := time.Date(2019, 10, 4, 0, 0, 0, 0, time.UTC)
     	subdate := 10*time.Hour
     

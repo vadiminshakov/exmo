@@ -1,3 +1,5 @@
+## Golang lib for EXMO.com (exmo.me) cryptocurrency exchange
+
 [Usage](https://github.com/VadimInshakov/exmo#usage)      
 [Testing](https://github.com/VadimInshakov/exmo#testing)     
 [API](https://github.com/VadimInshakov/exmo#api)

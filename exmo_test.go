@@ -2,6 +2,7 @@ package exmo
 
 import (
 	"fmt"
+	"os"
 	"reflect"
 	"strconv"
 	"testing"
@@ -12,12 +13,12 @@ func TestApi_query(t *testing.T) {
 	var orderId string // global variable for testing order cancelling after buying
 
 	// ATTENTION!
-	key := ""    // TODO replace with your api key from profile page
-	secret := "" // TODO replace with your api secret from profile page
+	key := os.Getenv("EXMO_PUBLIC")
+	secret := os.Getenv("EXMO_SECRET")
 
 	api := Api(key, secret)
 
-	t.Run("Get trades", func(t *testing.T) {
+	t.Run("GetTrades", func(t *testing.T) {
 		result, err := api.GetTrades("BTC_RUB")
 		if err != nil {
 			fmt.Errorf("api error: %s\n", err.Error())
@@ -41,7 +42,7 @@ func TestApi_query(t *testing.T) {
 		}
 	})
 
-	t.Run("Get order book", func(t *testing.T) {
+	t.Run("GetOrderBook", func(t *testing.T) {
 		result, err := api.GetOrderBook("BTC_RUB", 200)
 		if err != nil {
 			t.Errorf("api error: %s\n", err.Error())
@@ -74,7 +75,7 @@ func TestApi_query(t *testing.T) {
 		}
 	})
 
-	t.Run("Get ticker", func(t *testing.T) {
+	t.Run("Ticker", func(t *testing.T) {
 		ticker, errTicker := api.Ticker()
 		if errTicker != nil {
 			t.Errorf("api error: %s\n", errTicker.Error())
@@ -103,36 +104,26 @@ func TestApi_query(t *testing.T) {
 		}
 	})
 
-	t.Run("Get pair settings", func(t *testing.T) {
-		result, err := api.Ticker()
+	t.Run("GetPairSettings", func(t *testing.T) {
+		resultPairSettings, err := api.GetPairSettings()
 		if err != nil {
-			t.Errorf("api error: %s\n", err.Error())
+			t.Errorf("api error: %s\n", err)
 		} else {
-			for _, pairvalue := range result {
+			for _, pairvalue := range resultPairSettings {
 				for key, value := range pairvalue.(map[string]interface{}) {
-					if key == "updated" {
-						check, ok := value.(float64)
-						if !ok {
-							t.Errorf("Could not convert %s to float64", key)
-						}
-						if check < 0 {
-							t.Errorf("%s could not be less 0, got %d", key, value)
-						}
-					} else {
-						check, err := strconv.ParseFloat(value.(string), 64)
-						if err != nil {
-							t.Errorf("Could not convert %s to float64", key)
-						}
-						if check < 0 {
-							t.Errorf("%s could not be less 0, got %d", key, value)
-						}
+					if reflect.TypeOf(key).Name() != "string" {
+						t.Errorf("response item %#v not a string", key)
+					}
+					v, ok := value.(float64)
+					if !ok {
+						t.Errorf("Can't cast %#v to float64", v)
 					}
 				}
 			}
 		}
 	})
 
-	t.Run("Get currencies", func(t *testing.T) {
+	t.Run("GetCurrency", func(t *testing.T) {
 		result, err := api.GetCurrency()
 		if err != nil {
 			t.Errorf("api error: %s\n", err.Error())
@@ -145,7 +136,7 @@ func TestApi_query(t *testing.T) {
 		}
 	})
 
-	t.Run("Get user info", func(t *testing.T) {
+	t.Run("GetUserInfo", func(t *testing.T) {
 		result, err := api.GetUserInfo()
 		if err != nil {
 			t.Errorf("api error: %s\n", err.Error())
@@ -175,10 +166,10 @@ func TestApi_query(t *testing.T) {
 		}
 	})
 
-	t.Run("Get user trades", func(t *testing.T) {
-		usertrades, err1 := api.GetUserTrades("BTC_RUB")
-		if err1 != nil {
-			t.Errorf("api error: %s\n", err1.Error())
+	t.Run("GetUserTrades", func(t *testing.T) {
+		usertrades, err := api.GetUserTrades("BTC_RUB")
+		if err != nil {
+			t.Errorf("api error: %s\n", err.Error())
 		} else {
 			for _, val := range usertrades {
 				for _, interfacevalue := range val.([]interface{}) {
@@ -210,10 +201,10 @@ func TestApi_query(t *testing.T) {
 		}
 	})
 
-	t.Run("Buy BTC (custom price)", func(t *testing.T) {
-		order, errOrder := api.Buy("BTC_RUB", "0.001", "50096.72")
-		if errOrder != nil {
-			t.Errorf("api error: %s\n", errOrder.Error())
+	t.Run("Buy", func(t *testing.T) {
+		order, err := api.Buy("BTC_RUB", "0.001", "50096.72")
+		if err != nil {
+			t.Errorf("api error: %s\n", err)
 		} else {
 			fmt.Println("Creating order...")
 			for key, value := range order {
@@ -232,10 +223,10 @@ func TestApi_query(t *testing.T) {
 		}
 	})
 
-	t.Run("Buy BTC (market price)", func(t *testing.T) {
-		order, errOrder := api.MarketBuy("BTC_RUB", "0.001")
-		if errOrder != nil {
-			t.Errorf("api error: %s\n", errOrder.Error())
+	t.Run("MarketBuy", func(t *testing.T) {
+		order, err := api.MarketBuy("BTC_RUB", "0.001")
+		if err != nil {
+			t.Errorf("api error: %s\n", err)
 		} else {
 			fmt.Println("Creating order...")
 			for key, value := range order {
@@ -252,10 +243,10 @@ func TestApi_query(t *testing.T) {
 		}
 	})
 
-	t.Run("Sell BTC (custom price)", func(t *testing.T) {
-		order, errOrder := api.Sell("BTC_RUB", "0.001", "800000")
-		if errOrder != nil {
-			t.Errorf("api error: %s\n", errOrder.Error())
+	t.Run("Sell", func(t *testing.T) {
+		order, err := api.Sell("BTC_RUB", "0.001", "800000")
+		if err != nil {
+			t.Errorf("api error: %s\n", err)
 		} else {
 			fmt.Println("Creating order...")
 			for key, value := range order {
@@ -272,10 +263,10 @@ func TestApi_query(t *testing.T) {
 		}
 	})
 
-	t.Run("Sell BTC (market price)", func(t *testing.T) {
-		order, errOrder := api.MarketSell("BTC_RUB", "0.001")
-		if errOrder != nil {
-			t.Errorf("api error: %s\n", errOrder.Error())
+	t.Run("MarketSell", func(t *testing.T) {
+		order, err := api.MarketSell("BTC_RUB", "0.001")
+		if err != nil {
+			t.Errorf("api error: %s\n", err)
 		} else {
 			fmt.Println("Creating order...")
 			for key, value := range order {
@@ -292,10 +283,10 @@ func TestApi_query(t *testing.T) {
 		}
 	})
 
-	t.Run("Cancel order", func(t *testing.T) {
-		orderCancel, errCancel := api.OrderCancel(orderId)
-		if errCancel != nil {
-			t.Errorf("api error: %s\n", errCancel.Error())
+	t.Run("OrderCancel", func(t *testing.T) {
+		orderCancel, err := api.OrderCancel(orderId)
+		if err != nil {
+			t.Errorf("api error: %s\n", err)
 		} else {
 			fmt.Printf("\nCancel order %s \n", orderId)
 			for key, value := range orderCancel {
@@ -309,10 +300,10 @@ func TestApi_query(t *testing.T) {
 		}
 	})
 
-	t.Run("Get user's open orders", func(t *testing.T) {
-		resultUserOpenOrders, errUserOpenOrders := api.GetUserOpenOrders()
-		if errUserOpenOrders != nil {
-			fmt.Errorf("api error: %s\n", errUserOpenOrders.Error())
+	t.Run("GetUserOpenOrders", func(t *testing.T) {
+		resultUserOpenOrders, err := api.GetUserOpenOrders()
+		if err != nil {
+			fmt.Errorf("api error: %s\n", err)
 		} else {
 			for _, v := range resultUserOpenOrders {
 				if v != nil {
@@ -352,10 +343,10 @@ func TestApi_query(t *testing.T) {
 		}
 	})
 
-	t.Run("Get user's cancelled orders", func(t *testing.T) {
-		resultUserCancelledOrders, errUserCancelledOrders := api.GetUserCancelledOrders(0, 100)
-		if errUserCancelledOrders != nil {
-			fmt.Errorf("api error: %s\n", errUserCancelledOrders.Error())
+	t.Run("GetUserCancelledOrders", func(t *testing.T) {
+		resultUserCancelledOrders, err := api.GetUserCancelledOrders(0, 100)
+		if err != nil {
+			fmt.Errorf("api error: %s\n", err)
 		} else {
 			for _, v := range resultUserCancelledOrders {
 
@@ -377,10 +368,10 @@ func TestApi_query(t *testing.T) {
 		}
 	})
 
-	t.Run("Calculating the sum of buying a certain amount of currency for the particular currency pair", func(t *testing.T) {
-		resultRequiredAmount, errRequiredAmount := api.GetRequiredAmount("BTC_RUB", "0.01")
-		if errRequiredAmount != nil {
-			fmt.Errorf("api error: %s\n", errRequiredAmount.Error())
+	t.Run("GetRequiredAmount", func(t *testing.T) {
+		resultRequiredAmount, err := api.GetRequiredAmount("BTC_RUB", "0.01")
+		if err != nil {
+			fmt.Errorf("api error: %s\n", err)
 		} else {
 			for k, v := range resultRequiredAmount {
 				check, err := strconv.ParseFloat(v.(string), 64)
@@ -394,10 +385,10 @@ func TestApi_query(t *testing.T) {
 		}
 	})
 
-	t.Run("Getting the list of addresses for cryptocurrency deposit", func(t *testing.T) {
-		resultDepositAddress, errDepositAddress := api.GetDepositAddress()
-		if errDepositAddress != nil {
-			fmt.Errorf("api error: %s\n", errDepositAddress.Error())
+	t.Run("GetDepositAddress", func(t *testing.T) {
+		resultDepositAddress, err := api.GetDepositAddress()
+		if err != nil {
+			fmt.Errorf("api error: %s\n", err)
 		} else {
 			for _, v := range resultDepositAddress {
 				_, ok := v.(string)

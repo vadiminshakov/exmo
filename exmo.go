@@ -344,7 +344,7 @@ func (ex *Exmo) GetWalletHistory(date time.Time) (response ApiResponse, err erro
 
 	dateConverted := strconv.Itoa(int(dateUnix))
 
-	if !date.IsZero() {
+	if date.IsZero() {
 		response, err = ex.Api_query("authenticated", "wallet_history", ApiParams{})
 	} else {
 		response, err = ex.Api_query("authenticated", "wallet_history", ApiParams{"date": dateConverted})

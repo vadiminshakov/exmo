@@ -23,7 +23,7 @@ import (
 type ApiResponse map[string]interface{}
 
 // ApiParams is a map for API calls' params
-type ApiParams map[string]interface{}
+type ApiParams map[string]string
 
 // Exmo holds client-specific info
 type Exmo struct {

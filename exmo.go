@@ -43,7 +43,7 @@ func CheckErr(err error) {
 func Api(key string, secret string) Exmo {
 	var netTransport = &http.Transport{
 		MaxIdleConns:        30,
-		MaxConnsPerHost:     2,
+		MaxConnsPerHost:     1,
 		IdleConnTimeout:     30 * time.Second,
 		TLSHandshakeTimeout: 5 * time.Second,
 	}

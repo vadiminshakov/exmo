@@ -282,6 +282,7 @@ _Getting information about user's account_
 _Getting the list of user’s deals_
 
 **pair** - one or various currency pairs separated by commas (example: BTC_USD,BTC_EUR)
+**limit** - limit the number of displayed positions (default: 100, max: 1000)
 
 ```golang
     usertrades, err := api.GetUserTrades("BTC_RUB")

@@ -283,10 +283,11 @@ _Getting the list of user’s deals_
 
 **pair** - one or various currency pairs separated by commas (example: BTC_USD,BTC_EUR)
 **limit** - limit the number of displayed positions (default: 100, max: 1000)
+**offset** - last deal offset (default: 0)
 
 ```golang
     usertrades, err := api.GetUserTrades("BTC_RUB")
-    	if err != nil {
+    	if err != nil {s
     		fmt.Printf("api error: %s\n", err)
     	} else {
     		fmt.Println("User trades")

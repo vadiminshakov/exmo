@@ -195,8 +195,8 @@ func (ex *Exmo) GetUserInfo() (response ApiResponse, err error) {
 }
 
 // GetUserTrades return the list of user’s deals
-func (ex *Exmo) GetUserTrades(pair string, limit int) (response ApiResponse, err error) {
-	response, err = ex.Api_query("authenticated", "user_trades", ApiParams{"pair": pair, "limit": string(limit)})
+func (ex *Exmo) GetUserTrades(pair string, offset int, limit int) (response ApiResponse, err error) {
+	response, err = ex.Api_query("authenticated", "user_trades", ApiParams{"pair": pair, "limit": string(limit), "offset": string(offset)})
 	CheckErr(err)
 	return
 }

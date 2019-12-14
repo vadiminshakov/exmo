@@ -14,7 +14,7 @@ Import package into your code:
 
 Call fabric function for api instance:            
 
-    api := exmo.Api(key, secret)
+    var api = exmo.Api(key, secret)
 
 *(you can find key and secret in your profile settings)*  
   
@@ -25,8 +25,8 @@ package main
         "github.com/vadiminshakov/exmo" 
         ...
         )   
-
-    api := exmo.Api("K-92fds9df9ew0sfg9df9sf", "S-293r9dfsjvnef3n31lmr")
+  func main(){
+    var api = exmo.Api("K-92fds9df9ew0sfg9df9sf", "S-293r9dfsjvnef3n31lmr")
     
     // Getting information about user's account
     resultUserInfo, err := api.GetUserInfo()
@@ -70,6 +70,7 @@ package main
     			}
     		}
     	}
+  }
  ```                                                                 
    
 <br/>

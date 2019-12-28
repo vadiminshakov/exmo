@@ -1,7 +1,3 @@
-/*
-  Package exmo simplifies interaction with exmo.com API.
-*/
-
 package exmo
 
 import (

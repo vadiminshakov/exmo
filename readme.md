@@ -18,59 +18,61 @@ Call fabric function for api instance:
 
 *(you can find key and secret in your profile settings)*  
   
-Now you can use api features, for example:  
+Now you can use api features, for example:
+
 ```golang
 package main
-    import (
-        "github.com/vadiminshakov/exmo" 
-        ...
-        )   
-  func main(){
-    var api = exmo.Api("K-92fds9df9ew0sfg9df9sf", "S-293r9dfsjvnef3n31lmr")
-    
-    // Getting information about user's account
-    resultUserInfo, err := api.GetUserInfo()
-    	if err != nil {
-    		fmt.Printf("api error: %s\n", err)
-    	} else {
-    		for key, value := range resultUserInfo {
-    			if key == "balances" {
-    				fmt.Println("\n-- balances:")
-    				for k, v := range value.(map[string]interface{}) {
-    					fmt.Println(k, v)
-    				}
-    			}
-    			if key == "reserved" {
-    				fmt.Println("\n-- reserved:")
-    				for k, v := range value.(map[string]interface{}) {
-    					fmt.Println(k, v)
-    				}
-    			}
-    		}
-    	}
-    
-    // Buy BTC for RUB
-    order, err := api.Buy("BTC_RUB", "0.001", "50096")
-    	if err != nil {
-    		fmt.Printf("api error: %s\n", err)
-    	} else {
-    		fmt.Println("Creating order...")
-    		for key, value := range order {
-    			if key == "result" && value != true {
-    				fmt.Println("\nError")
-    			}
-    			if key == "error" && value != "" {
-    				fmt.Println(value)
-    			}
-    			if key == "order_id" && value != nil {
-    				fmt.Printf("Order id: %d\n", int(value.(float64)))
-    				val := strconv.Itoa(int(value.(float64)))
-    				orderId = val
-    				fmt.Printf("Order id: %s\n", orderId)
-    			}
-    		}
-    	}
-  }
+
+import (
+	"github.com/vadiminshakov/exmo"
+	"log"
+)
+...
+)
+func main() {
+	var api = exmo.Api("K-92fds9df9ew0sfg9df9sf", "S-293r9dfsjvnef3n31lmr")
+
+	// Getting information about user's account
+	resultUserInfo, err := api.GetUserInfo()
+	if err != nil {
+		log.Fatalf("api error: %s\n", err)
+	}
+	for key, value := range resultUserInfo {
+		if key == "balances" {
+			log.Println("\n-- balances:")
+			for k, v := range value.(map[string]interface{}) {
+				log.Println(k, v)
+			}
+		}
+		if key == "reserved" {
+			log.Println("\n-- reserved:")
+			for k, v := range value.(map[string]interface{}) {
+				log.Println(k, v)
+			}
+		}
+	}
+
+	// Buy BTC for RUB
+	order, err := api.Buy("BTC_RUB", "0.001", "50096")
+	if err != nil {
+		log.Fatalf("api error: %s\n", err)
+	}
+	log.Println("Creating order...")
+	for key, value := range order {
+		if key == "result" && value != true {
+			log.Println("\nError")
+		}
+		if key == "error" && value != "" {
+			log.Println(value)
+		}
+		if key == "order_id" && value != nil {
+			log.Printf("Order id: %d\n", int(value.(float64)))
+			val := strconv.Itoa(int(value.(float64)))
+			orderId = val
+			log.Printf("Order id: %s\n", orderId)
+		}
+	}
+}
  ```                                                                 
    
 <br/>

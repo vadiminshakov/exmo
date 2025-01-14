@@ -24,34 +24,26 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"strconv"
 	"time"
 )
 
-// ApiResponse is a map for API responses
+// ApiResponse is a map for API responses.
 type ApiResponse map[string]interface{}
 
-// ApiParams is a map for API calls' params
+// ApiParams is a map for API calls' params.
 type ApiParams map[string]string
 
-// Exmo holds client-specific info
+// Exmo holds client-specific info.
 type Exmo struct {
 	key    string // public key
 	secret string // secret key
 	client *http.Client
 }
 
-// CheckErr checks error object
-func CheckErr(err error) {
-	if err != nil {
-		log.Printf("api error: %s\n", err.Error())
-	}
-}
-
-// Api creates Exmo instance with specified credentials
+// Api creates Exmo instance with specified credentials.
 func Api(key string, secret string) Exmo {
 	var netTransport = &http.Transport{
 		MaxIdleConns:        30,
@@ -66,7 +58,7 @@ func Api(key string, secret string) Exmo {
 	return Exmo{key, secret, client}
 }
 
-// Api_query is a general query method for API calls
+// Api_query is a general query method for API calls.
 func (ex *Exmo) Api_query(mode string, method string, params ApiParams) (ApiResponse, error) {
 
 	post_params := url.Values{}
@@ -121,7 +113,7 @@ func nonce() string {
 	return fmt.Sprintf("%d", time.Now().UnixNano())
 }
 
-// Do_sign encrypts POST data (param=val&param1=val1) with method HMAC-SHA512 using secret key; the secret key also can be found in user’s profile settings
+// Do_sign encrypts POST data (param=val&param1=val1) with method HMAC-SHA512 using secret key; the secret key also can be found in user’s profile settings.
 func (ex *Exmo) Do_sign(message string) string {
 	mac := hmac.New(sha512.New, []byte(ex.secret))
 	mac.Write([]byte(message))
@@ -132,45 +124,32 @@ func (ex *Exmo) Do_sign(message string) string {
    Public API
 */
 
-// GetTrades return list of the deals on currency pairs
-func (ex *Exmo) GetTrades(pair string) (response ApiResponse, err error) {
-	response, err = ex.Api_query("public", "trades", ApiParams{"pair": pair})
-	CheckErr(err)
-	return
+// GetTrades return list of the deals on currency pairs.
+func (ex *Exmo) GetTrades(pair string) (ApiResponse, error) {
+	return ex.Api_query("public", "trades", ApiParams{"pair": pair})
 }
 
-// GetOrderBook return the book of current orders on the currency pair
-func (ex *Exmo) GetOrderBook(pair string, limit int) (response ApiResponse, err error) {
+// GetOrderBook return the book of current orders on the currency pair.
+func (ex *Exmo) GetOrderBook(pair string, limit int) (ApiResponse, error) {
 	if limit < 100 || limit > 1000 {
-		fmt.Printf("limit param must be in range of 100-1000")
-		response = nil
-		err = errors.New("limit param must be in range of 100-1000")
-	} else {
-		response, err = ex.Api_query("public", "order_book", ApiParams{"pair": pair, "limit": string(limit)})
-		CheckErr(err)
+		return nil, errors.New("limit param must be in range of 100-1000")
 	}
-	return
+
+	return ex.Api_query("public", "order_book", ApiParams{"pair": pair, "limit": string(limit)})
 }
 
-// Ticker return statistics on prices and volume of trades by currency pairs
-func (ex *Exmo) Ticker() (response ApiResponse, err error) {
-	response, err = ex.Api_query("public", "ticker", ApiParams{})
-	if err != nil {
-		fmt.Printf("api error: %s\n", err.Error())
-	}
-	return
+// Ticker return statistics on prices and volume of trades by currency pairs.
+func (ex *Exmo) Ticker() (ApiResponse, error) {
+	return ex.Api_query("public", "ticker", ApiParams{})
 }
 
-// GetPairSettings return currency pairs settings
-func (ex *Exmo) GetPairSettings() (response ApiResponse, err error) {
-	response, err = ex.Api_query("public", "pair_settings", ApiParams{})
-	CheckErr(err)
-	return
+// GetPairSettings return currency pairs settings.
+func (ex *Exmo) GetPairSettings() (ApiResponse, error) {
+	return ex.Api_query("public", "pair_settings", ApiParams{})
 }
 
-// GetCurrency return currencies list
-func (ex *Exmo) GetCurrency() (response []string, err error) {
-
+// GetCurrency return currencies list.
+func (ex *Exmo) GetCurrency() ([]string, error) {
 	resp, err := http.Get("https://api.exmo.com/v1/currency")
 	if err != nil {
 		return nil, err
@@ -187,7 +166,7 @@ func (ex *Exmo) GetCurrency() (response []string, err error) {
 	}
 
 	var dat []string
-	err2 := json.Unmarshal([]byte(body), &dat)
+	err2 := json.Unmarshal(body, &dat)
 	if err2 != nil {
 		return nil, err2
 	}
@@ -199,18 +178,14 @@ func (ex *Exmo) GetCurrency() (response []string, err error) {
    Authenticated API
 */
 
-// GetUserInfo return information about user's account
-func (ex *Exmo) GetUserInfo() (response ApiResponse, err error) {
-	response, err = ex.Api_query("authenticated", "user_info", nil)
-	CheckErr(err)
-	return
+// GetUserInfo return information about user's account.
+func (ex *Exmo) GetUserInfo() (ApiResponse, error) {
+	return ex.Api_query("authenticated", "user_info", nil)
 }
 
-// GetUserTrades return the list of user’s deals
+// GetUserTrades return the list of user’s deals.
 func (ex *Exmo) GetUserTrades(pair string, offset, limit int) (response ApiResponse, err error) {
-	response, err = ex.Api_query("authenticated", "user_trades", ApiParams{"pair": pair, "limit": string(limit), "offset": string(offset)})
-	CheckErr(err)
-	return
+	return ex.Api_query("authenticated", "user_trades", ApiParams{"pair": pair, "limit": string(limit), "offset": string(offset)})
 }
 
 // OrderCreate creates order

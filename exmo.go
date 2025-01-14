@@ -224,53 +224,38 @@ func (ex *Exmo) MarketSellTotal(pair string, quantity string) (ApiResponse, erro
 }
 
 // OrderCancel cancels order
-func (ex *Exmo) OrderCancel(orderId string) (response ApiResponse, err error) {
-	response, err = ex.Api_query("authenticated", "order_cancel", ApiParams{"order_id": orderId})
-	CheckErr(err)
-	return
+func (ex *Exmo) OrderCancel(orderId string) (ApiResponse, error) {
+	return ex.Api_query("authenticated", "order_cancel", ApiParams{"order_id": orderId})
 }
 
 // GetUserOpenOrders returns the list of user’s active orders
-func (ex *Exmo) GetUserOpenOrders() (response ApiResponse, err error) {
-	response, err = ex.Api_query("authenticated", "user_open_orders", ApiParams{})
-	CheckErr(err)
-	return
+func (ex *Exmo) GetUserOpenOrders() (ApiResponse, error) {
+	return ex.Api_query("authenticated", "user_open_orders", ApiParams{})
 }
 
 // GetUserCancelledOrders returns the list of user’s deals
 // This method almost completely copies Api_query method, but it returns array of interfaces, not map
-func (ex *Exmo) GetUserCancelledOrders(offset uint, limit uint) (response ApiResponse, err error) {
+func (ex *Exmo) GetUserCancelledOrders(offset uint, limit uint) (ApiResponse, error) {
 	if limit < 100 || limit > 1000 {
-		fmt.Printf("limit param must be in range of 100-1000")
-		response = nil
-		err = errors.New("limit param must be in range of 100-1000")
-	} else {
-		response, err = ex.Api_query("authenticated", "order_cancel", ApiParams{"offset": string(offset), "limit": string(limit)})
-		CheckErr(err)
-		return
+		return nil, errors.New("limit param must be in range of 100-1000")
 	}
-	return
+
+	return ex.Api_query("authenticated", "order_cancel", ApiParams{"offset": string(offset), "limit": string(limit)})
 }
 
 // GetOrderTrades returns the list of user’s cancelled orders
-func (ex *Exmo) GetOrderTrades(orderId string) (response ApiResponse, err error) {
-	response, err = ex.Api_query("authenticated", "order_trades", ApiParams{"order_id": orderId})
-	CheckErr(err)
-	return
+func (ex *Exmo) GetOrderTrades(orderId string) (ApiResponse, error) {
+	return ex.Api_query("authenticated", "order_trades", ApiParams{"order_id": orderId})
 }
 
 // GetRequiredAmount calculating and returns the sum of buying a certain amount of currency for the particular currency pair
-func (ex *Exmo) GetRequiredAmount(pair string, quantity string) (response ApiResponse, err error) {
-	response, err = ex.Api_query("authenticated", "required_amount", ApiParams{"pair": pair, "quantity": quantity})
-	CheckErr(err)
-	return
+func (ex *Exmo) GetRequiredAmount(pair string, quantity string) (ApiResponse, error) {
+	return ex.Api_query("authenticated", "required_amount", ApiParams{"pair": pair, "quantity": quantity})
 }
 
 // GetDepositAddress returns the list of addresses for cryptocurrency deposit
-func (ex *Exmo) GetDepositAddress() (response ApiResponse, err error) {
-	response, err = ex.Api_query("authenticated", "deposit_address", ApiParams{})
-	CheckErr(err)
-	return
+func (ex *Exmo) GetDepositAddress() (ApiResponse, error) {
+	return ex.Api_query("authenticated", "deposit_address", ApiParams{})
 }
 
 /*
@@ -278,17 +263,14 @@ func (ex *Exmo) GetDepositAddress() (response ApiResponse, err error) {
 */
 
 // GetWalletHistory returns history of wallet
-func (ex *Exmo) GetWalletHistory(date time.Time) (response ApiResponse, err error) {
+func (ex *Exmo) GetWalletHistory(date time.Time) (ApiResponse, error) {
 	dateUnix := date.Unix()
 
 	dateConverted := strconv.Itoa(int(dateUnix))
 
 	if date.IsZero() {
-		response, err = ex.Api_query("authenticated", "wallet_history", ApiParams{})
+		return ex.Api_query("authenticated", "wallet_history", ApiParams{})
 	} else {
-		response, err = ex.Api_query("authenticated", "wallet_history", ApiParams{"date": dateConverted})
+		return ex.Api_query("authenticated", "wallet_history", ApiParams{"date": dateConverted})
 	}
-
-	CheckErr(err)
-	return
 }

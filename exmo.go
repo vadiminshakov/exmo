@@ -184,43 +184,33 @@ func (ex *Exmo) GetUserInfo() (ApiResponse, error) {
 }
 
 // GetUserTrades return the list of user’s deals.
-func (ex *Exmo) GetUserTrades(pair string, offset, limit int) (response ApiResponse, err error) {
+func (ex *Exmo) GetUserTrades(pair string, offset, limit int) (ApiResponse, error) {
 	return ex.Api_query("authenticated", "user_trades", ApiParams{"pair": pair, "limit": string(limit), "offset": string(offset)})
 }
 
 // OrderCreate creates order
-func (ex *Exmo) OrderCreate(pair string, quantity string, price string, typeOrder string) (response ApiResponse, err error) {
-	response, err = ex.Api_query("authenticated", "order_create", ApiParams{"pair": pair, "quantity": quantity, "price": price, "type": typeOrder})
-	CheckErr(err)
-	return
+func (ex *Exmo) OrderCreate(pair string, quantity string, price string, typeOrder string) (ApiResponse, error) {
+	return ex.Api_query("authenticated", "order_create", ApiParams{"pair": pair, "quantity": quantity, "price": price, "type": typeOrder})
 }
 
 // Buy creates buy order
-func (ex *Exmo) Buy(pair string, quantity string, price string) (response ApiResponse, err error) {
-	response, err = ex.OrderCreate(pair, quantity, price, "buy")
-	CheckErr(err)
-	return
+func (ex *Exmo) Buy(pair string, quantity string, price string) (ApiResponse, error) {
+	return ex.OrderCreate(pair, quantity, price, "buy")
 }
 
 // Buy creates sell order
-func (ex *Exmo) Sell(pair string, quantity string, price string) (response ApiResponse, err error) {
-	response, err = ex.OrderCreate(pair, quantity, price, "sell")
-	CheckErr(err)
-	return
+func (ex *Exmo) Sell(pair string, quantity string, price string) (ApiResponse, error) {
+	return ex.OrderCreate(pair, quantity, price, "sell")
 }
 
 // MarketBuy creates market buy-order
-func (ex *Exmo) MarketBuy(pair string, quantity string) (response ApiResponse, err error) {
-	response, err = ex.OrderCreate(pair, quantity, "0", "market_buy")
-	CheckErr(err)
-	return
+func (ex *Exmo) MarketBuy(pair string, quantity string) (ApiResponse, error) {
+	return ex.OrderCreate(pair, quantity, "0", "market_buy")
 }
 
 // MarketBuyTotal creates market buy-order for a certain amount (quantity parameter)
-func (ex *Exmo) MarketBuyTotal(pair string, quantity string) (response ApiResponse, err error) {
-	response, err = ex.OrderCreate(pair, quantity, "0", "market_buy_total")
-	CheckErr(err)
-	return
+func (ex *Exmo) MarketBuyTotal(pair string, quantity string) (ApiResponse, error) {
+	return ex.OrderCreate(pair, quantity, "0", "market_buy_total")
 }
 
 // MarketSell creates market sell-order

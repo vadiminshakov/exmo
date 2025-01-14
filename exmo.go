@@ -214,17 +214,13 @@ func (ex *Exmo) MarketBuyTotal(pair string, quantity string) (ApiResponse, error
 }
 
 // MarketSell creates market sell-order
-func (ex *Exmo) MarketSell(pair string, quantity string) (response ApiResponse, err error) {
-	response, err = ex.OrderCreate(pair, quantity, "0", "market_sell")
-	CheckErr(err)
-	return
+func (ex *Exmo) MarketSell(pair string, quantity string) (ApiResponse, error) {
+	return ex.OrderCreate(pair, quantity, "0", "market_sell")
 }
 
 // MarketSellTotal creates market sell-order for a certain amount (quantity parameter)
-func (ex *Exmo) MarketSellTotal(pair string, quantity string) (response ApiResponse, err error) {
-	response, err = ex.OrderCreate(pair, quantity, "0", "market_sell_total")
-	CheckErr(err)
-	return
+func (ex *Exmo) MarketSellTotal(pair string, quantity string) (ApiResponse, error) {
+	return ex.OrderCreate(pair, quantity, "0", "market_sell_total")
 }
 
 // OrderCancel cancels order

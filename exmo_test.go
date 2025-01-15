@@ -17,7 +17,7 @@
 package exmo
 
 import (
-	"fmt"
+	"github.com/stretchr/testify/require"
 	"os"
 	"reflect"
 	"strconv"
@@ -36,84 +36,77 @@ func TestApi_query(t *testing.T) {
 
 	t.Run("GetTrades", func(t *testing.T) {
 		result, err := api.GetTrades("BTC_RUB")
-		if err != nil {
-			fmt.Errorf("api error: %s\n", err.Error())
-		} else {
-			for _, v := range result {
-				for _, val := range v.([]interface{}) {
-					for key, value := range val.(map[string]interface{}) {
-						if key == "trade_id" || key == "date" {
-							check, ok := value.(float64)
-							if !ok {
-								t.Errorf("Could not convert %s to float64", key)
-							}
-							if check < 0 {
-								t.Errorf("%s could not be less 0, got %d", key, value)
-							}
+		require.NoError(t, err)
+
+		for _, v := range result {
+			for _, val := range v.([]interface{}) {
+				for key, value := range val.(map[string]interface{}) {
+					if key == "trade_id" || key == "date" {
+						check, ok := value.(float64)
+						require.True(t, ok)
+
+						if check < 0 {
+							t.Errorf("%s could not be less 0, got %d", key, value)
 						}
 					}
 				}
 			}
-
 		}
 	})
 
 	t.Run("GetOrderBook", func(t *testing.T) {
 		result, err := api.GetOrderBook("BTC_RUB", 200)
-		if err != nil {
-			t.Errorf("api error: %s\n", err.Error())
-		} else {
-			for _, v := range result {
-				for key, value := range v.(map[string]interface{}) {
-					if key == "bid" || key == "ask" {
-						for _, val := range value.([]interface{}) {
-							for _, valnested := range val.([]interface{}) {
-								check, err := strconv.ParseFloat(valnested.(string), 64)
-								if err != nil {
-									t.Errorf("Could not convert %s to float64", key)
-								}
-								if check < 0 {
-									t.Errorf("%s could not be less 0, got %d", key, valnested)
-								}
+		require.NoError(t, err)
+
+		for _, v := range result {
+			for key, value := range v.(map[string]interface{}) {
+				if key == "bid" || key == "ask" {
+					for _, val := range value.([]interface{}) {
+						for _, valnested := range val.([]interface{}) {
+							check, err := strconv.ParseFloat(valnested.(string), 64)
+							if err != nil {
+								t.Errorf("Could not convert %s to float64", key)
+							}
+							if check < 0 {
+								t.Errorf("%s could not be less 0, got %d", key, valnested)
 							}
 						}
-					} else {
-						check, err := strconv.ParseFloat(value.(string), 64)
-						if err != nil {
-							t.Errorf("Could not convert %s to float64", key)
-						}
-						if check < 0 {
-							t.Errorf("%s could not be less 0, got %d", key, value)
-						}
+					}
+				} else {
+					check, err := strconv.ParseFloat(value.(string), 64)
+					if err != nil {
+						t.Errorf("Could not convert %s to float64", key)
+					}
+					if check < 0 {
+						t.Errorf("%s could not be less 0, got %d", key, value)
 					}
 				}
 			}
 		}
+
 	})
 
 	t.Run("Ticker", func(t *testing.T) {
 		ticker, errTicker := api.Ticker()
-		if errTicker != nil {
-			t.Errorf("api error: %s\n", errTicker.Error())
-		} else {
-			for _, pairvalue := range ticker {
-				for key, value := range pairvalue.(map[string]interface{}) {
-					if key == "updated" {
-						check, ok := value.(float64)
-						if !ok {
-							t.Errorf("Could not convert %s to float64", key)
-						}
-						if check < 0 {
-							t.Errorf("%s could not be less 0, got %d", key, value)
-						}
-					} else {
-						check, err := strconv.ParseFloat(value.(string), 64)
-						if err != nil {
-							t.Errorf("Could not convert %s to float64", key)
-						}
-						if check < 0 {
-							t.Errorf("%s could not be less 0, got %d", key, value)
-						}
+		require.NoError(t, errTicker)
+
+		for _, pairvalue := range ticker {
+			for key, value := range pairvalue.(map[string]interface{}) {
+				if key == "updated" {
+					check, ok := value.(float64)
+					if !ok {
+						t.Errorf("Could not convert %s to float64", key)
+					}
+					if check < 0 {
+						t.Errorf("%s could not be less 0, got %d", key, value)
+					}
+				} else {
+					check, err := strconv.ParseFloat(value.(string), 64)
+					if err != nil {
+						t.Errorf("Could not convert %s to float64", key)
+					}
+					if check < 0 {
+						t.Errorf("%s could not be less 0, got %d", key, value)
 					}
 				}
 			}
@@ -122,19 +115,17 @@ func TestApi_query(t *testing.T) {
 
 	t.Run("GetPairSettings", func(t *testing.T) {
 		resultPairSettings, err := api.GetPairSettings()
-		if err != nil {
-			t.Errorf("api error: %s\n", err)
-		} else {
-			for _, pairvalue := range resultPairSettings {
-				for key, value := range pairvalue.(map[string]interface{}) {
-					if reflect.TypeOf(key).Name() != "string" {
-						t.Errorf("response item %#v not a string", key)
-					}
+		require.NoError(t, err)
 
-					_, err := strconv.ParseFloat(value.(string), 64)
-					if err != nil {
-						t.Errorf("Can't cast %#v to float64, error: %s", value, err)
-					}
+		for _, pairvalue := range resultPairSettings {
+			for key, value := range pairvalue.(map[string]interface{}) {
+				if reflect.TypeOf(key).Name() != "string" {
+					t.Errorf("response item %#v not a string", key)
+				}
+
+				_, err := strconv.ParseFloat(value.(string), 64)
+				if err != nil {
+					t.Errorf("Can't cast %#v to float64, error: %s", value, err)
 				}
 			}
 		}
@@ -142,25 +133,58 @@ func TestApi_query(t *testing.T) {
 
 	t.Run("GetCurrency", func(t *testing.T) {
 		result, err := api.GetCurrency()
-		if err != nil {
-			t.Errorf("api error: %s\n", err.Error())
-		} else {
-			for _, pair := range result {
-				if reflect.TypeOf(pair).Name() != "string" {
-					t.Errorf("response item %#v not a string", pair)
-				}
+		require.NoError(t, err)
+
+		for _, pair := range result {
+			if reflect.TypeOf(pair).Name() != "string" {
+				t.Errorf("response item %#v not a string", pair)
 			}
 		}
 	})
 
 	t.Run("GetUserInfo", func(t *testing.T) {
 		result, err := api.GetUserInfo()
-		if err != nil {
-			t.Errorf("api error: %s\n", err.Error())
-		} else {
-			for key, value := range result {
-				if key == "balances" || key == "reserved" {
-					for k, v := range value.(map[string]interface{}) {
+		require.NoError(t, err)
+
+		for key, value := range result {
+			if key == "balances" || key == "reserved" {
+				for k, v := range value.(map[string]interface{}) {
+					check, err := strconv.ParseFloat(v.(string), 64)
+					if err != nil {
+						t.Errorf("Could not convert %s to float64", k)
+					}
+					if check < 0 {
+						t.Errorf("%s could not be less 0, got %d", k, v)
+					}
+				}
+			} else {
+				check, ok := value.(float64)
+				if !ok {
+					t.Errorf("Could not convert %s to float64", key)
+				}
+				if check < 0 {
+					t.Errorf("%s could not be less 0, got %d", key, value)
+				}
+			}
+		}
+	})
+
+	t.Run("GetUserTrades", func(t *testing.T) {
+		usertrades, err := api.GetUserTrades("BTC_RUB", 0, 1000)
+		require.NoError(t, err)
+
+		for _, val := range usertrades {
+			for _, interfacevalue := range val.([]interface{}) {
+				for k, v := range interfacevalue.(map[string]interface{}) {
+					if k == "trade_id" || k == "date" || k == "order_id" {
+						check, ok := v.(float64)
+						if !ok {
+							t.Errorf("Could not convert %s to float64", k)
+						}
+						if check < 0 {
+							t.Errorf("%s could not be less 0, got %d", k, v)
+						}
+					} else if k == "quantity" || k == "price" || k == "amount" {
 						check, err := strconv.ParseFloat(v.(string), 64)
 						if err != nil {
 							t.Errorf("Could not convert %s to float64", k)
@@ -168,49 +192,9 @@ func TestApi_query(t *testing.T) {
 						if check < 0 {
 							t.Errorf("%s could not be less 0, got %d", k, v)
 						}
-					}
-				} else {
-					check, ok := value.(float64)
-					if !ok {
-						t.Errorf("Could not convert %s to float64", key)
-					}
-					if check < 0 {
-						t.Errorf("%s could not be less 0, got %d", key, value)
-					}
-				}
-			}
-
-		}
-	})
-
-	t.Run("GetUserTrades", func(t *testing.T) {
-		usertrades, err := api.GetUserTrades("BTC_RUB", 0, 1000)
-		if err != nil {
-			t.Errorf("api error: %s\n", err.Error())
-		} else {
-			for _, val := range usertrades {
-				for _, interfacevalue := range val.([]interface{}) {
-					for k, v := range interfacevalue.(map[string]interface{}) {
-						if k == "trade_id" || k == "date" || k == "order_id" {
-							check, ok := v.(float64)
-							if !ok {
-								t.Errorf("Could not convert %s to float64", k)
-							}
-							if check < 0 {
-								t.Errorf("%s could not be less 0, got %d", k, v)
-							}
-						} else if k == "quantity" || k == "price" || k == "amount" {
-							check, err := strconv.ParseFloat(v.(string), 64)
-							if err != nil {
-								t.Errorf("Could not convert %s to float64", k)
-							}
-							if check < 0 {
-								t.Errorf("%s could not be less 0, got %d", k, v)
-							}
-						} else {
-							if reflect.TypeOf(v).Name() != "string" {
-								t.Errorf("response item %s (value %#v) not a string, but %T", k, v, v)
-							}
+					} else {
+						if reflect.TypeOf(v).Name() != "string" {
+							t.Errorf("response item %s (value %#v) not a string, but %T", k, v, v)
 						}
 					}
 				}
